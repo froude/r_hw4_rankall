@@ -106,10 +106,11 @@ rankall <- function(outcome, rank) {
   
 # SPLIT THE NON-SORTED TABLE  
   table_sorted_split2 <- split(out_table_sorted, out_table_sorted$State)
-  print("Split table is:")
+#  print("Split table is:")
 #  print(table_sorted_split2) # Cool. This works.
-  print(table_sorted_split2$WV)
-# TEST LAPPLY
+#  print(table_sorted_split2$WV)
+
+# TEST LAPPLY with ColMeans - This works
 #  test_lapply <- lapply(table_sorted_split2, mean)
   print(names(table_sorted_split2))
   str(table_sorted_split2)
@@ -117,6 +118,31 @@ rankall <- function(outcome, rank) {
      colMeans(dummy[, c("Out.Measure", "Rank")])
       })
   print(test_lapply)
+
+# TEST AGAIN, BUT CREATE A FUNCTION THAT SORTS THE LIST FOR EACH STATE BY OUTCOME
+# First, try it on a single state 
+  table_sorted_splitWV <- table_sorted_split2$WV
+  print("Split table for WV is:")
+  print(table_sorted_splitWV)
+# SORT
+#  out_table_sorted_state <- out_comb[ order(out_comb[,3], out_comb[,1]), ] # the hospitals are already sorted by rank
+
+# RECREATE THE RANK COLUMN - we will eventually do this for each state
+  out_param <- table_sorted_splitWV[, 3]
+  temp_matrix <- matrix(out_param, nrow = length(out_param), ncol = 1)
+  print("temp_matrix is") 
+  print(head(temp_matrix))
+  row_ <- row(temp_matrix)
+  row_ <- as.vector(row_) # Creates a vector out of the row numbers
+  
+  # Now add the rank column - THIS IS FOR A SINGLE STATE
+  out_table_sorted <- data.frame("Hospital" = table_sorted_splitWV[,1], 
+                                 "State" = table_sorted_splitWV[,2], 
+                                 "Out Measure" = table_sorted_splitWV[,3], #This works, but the outcome isn't always Heart failure
+#                                 as.character(outcome) = out_table_sorted[,3], #Doesn't work
+                                 "Rank" = row_)
+  print("out_table_sorted for WV is")  
+  print(out_table_sorted)  
   # NOW TRY TO SORT THE HOSPITALS IN EACH STATE BY SPECIFIED OUTCOME
   #  lapply_split <- lapply(table_sorted_split, function(dd) {
   #    order(dd[out_comb[,3], out_comb[,1]])
