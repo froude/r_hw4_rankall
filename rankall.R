@@ -11,6 +11,10 @@ rankall <- function(outcome, rank) {
   out_table <- read.csv("outcome-of-care-measures.csv",
                         colClasses = "character", na.strings = "Not Available",
                         stringsAsFactors = FALSE)
+# GET A COMPLETE LIST OF STATES AND TERRITORIES
+  states_list <- unique(out_table[,7])
+  print(states_list)
+  print(paste("Class of states_list  (line 17) is", class(states_list)))
 # HEART ATTACK
   if(outcome == "heart attack") {
     outcome <- "heart.attack"
@@ -80,10 +84,10 @@ rankall <- function(outcome, rank) {
 # SORT
   out_table_sorted <- out_comb[ order(out_comb[,3], out_comb[,1]), ] # 
   print(out_table_sorted[1:100, ])
-  print(out_table_sorted[out_comb[,3]<10, ])
+#  print(out_table_sorted[out_comb[,3]<10, ])
   
   out_table_col3_class <- class(out_comb[,3])
-  print("out_table_col3_class is")
+  print("out_table_col3_class (line 90) is")
   print(out_table_col3_class)
   
 # CREATE THE RANK COLUMN
@@ -100,7 +104,7 @@ rankall <- function(outcome, rank) {
                                  "Out Measure" = out_table_sorted[,3], #This works, but the outcome isn't always Heart failure
 #                                 as.character(outcome) = out_table_sorted[,3], #Doesn't work
                                  "Rank" = row_)
-  print("The sorted table is shown below")
+  print("The sorted table (line 107) is shown below")
   #  print(head(out_table_sorted))
   print(out_table_sorted[1:100, ])
   
@@ -113,11 +117,11 @@ rankall <- function(outcome, rank) {
 # TEST LAPPLY with ColMeans - This works
 #  test_lapply <- lapply(table_sorted_split2, mean)
   print(names(table_sorted_split2))
-  str(table_sorted_split2)
+#  str(table_sorted_split2) # This works, but it takes up a lot of room when printing
     test_lapply <- lapply(table_sorted_split2, function(dummy) {
      colMeans(dummy[, c("Out.Measure", "Rank")])
       })
-  print(test_lapply)
+#  print(test_lapply) # This works, but comment it for test runs
 
 # TEST AGAIN, BUT CREATE A FUNCTION THAT SORTS THE LIST FOR EACH STATE BY OUTCOME
 # First, try it on a single state 
@@ -135,7 +139,7 @@ rankall <- function(outcome, rank) {
   row_ <- row(temp_matrix)
   row_ <- as.vector(row_) # Creates a vector out of the row numbers
   
-  # Now add the rank column - THIS IS FOR A SINGLE STATE
+  # Now add the rank column - THIS IS FOR THE FULL SET OF STATES
   out_table_sorted <- data.frame("Hospital" = table_sorted_splitWV[,1], 
                                  "State" = table_sorted_splitWV[,2], 
                                  "Out Measure" = table_sorted_splitWV[,3], #This works, but the outcome isn't always Heart failure
