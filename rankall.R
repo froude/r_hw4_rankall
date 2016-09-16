@@ -124,60 +124,50 @@ rankall <- function(outcome, rank) {
 #  print(test_lapply) # This works, but comment it for test runs
 
 # TEST AGAIN, BUT CREATE A FUNCTION THAT SORTS THE LIST FOR EACH STATE BY OUTCOME
-# First, try it on a single state 
-  table_sorted_splitWV <- table_sorted_split2$WV
-  print("Split table for WV is:")
-  print(table_sorted_splitWV)
-# SORT
+# CREATE A FOR LOOP TO DO THIS FOR EACH STATE:
+  #for(i in seq_along(states_list)) {
+#      table_sorted_split_WV <- table_sorted_split2$WV
+  table_sorted_split_WV <- data.frame(table_sorted_split2[53]) # see if this will return the table for WV
+  print("Split table for WV (line 132) is:")
+  print(table_sorted_split_WV)
+  str(table_sorted_split_WV)
+  print(table_sorted_split_WV[,3])
+  
+  # SORT
 #  out_table_sorted_state <- out_comb[ order(out_comb[,3], out_comb[,1]), ] # the hospitals are already sorted by rank
 
 # RECREATE THE RANK COLUMN - we will eventually do this for each state
-  out_param <- table_sorted_splitWV[, 3]
+  out_param <- table_sorted_split_WV[, 3]
   temp_matrix <- matrix(out_param, nrow = length(out_param), ncol = 1)
   print("temp_matrix is") 
   print(head(temp_matrix))
   row_ <- row(temp_matrix)
   row_ <- as.vector(row_) # Creates a vector out of the row numbers
   
-  # Now add the rank column - THIS IS FOR THE FULL SET OF STATES
-  out_table_sorted <- data.frame("Hospital" = table_sorted_splitWV[,1], 
-                                 "State" = table_sorted_splitWV[,2], 
-                                 "Out Measure" = table_sorted_splitWV[,3], #This works, but the outcome isn't always Heart failure
+  # Now add the rank column - THIS IS FOR A SINGLE STATE
+  out_table_sorted <- data.frame("Hospital" = table_sorted_split_WV[,1], 
+                                 "State" = table_sorted_split_WV[,2], 
+                                 "Out Measure" = table_sorted_split_WV[,3], #This works, but the outcome isn't always Heart failure
 #                                 as.character(outcome) = out_table_sorted[,3], #Doesn't work
                                  "Rank" = row_)
   print("out_table_sorted for WV is")  
-  print(out_table_sorted)  
-  # NOW TRY TO SORT THE HOSPITALS IN EACH STATE BY SPECIFIED OUTCOME
-  #  lapply_split <- lapply(table_sorted_split, function(dd) {
-  #    order(dd[out_comb[,3], out_comb[,1]])
-  #  })
-  #  print(lapply_split)
-  #  tapply_test <- tapply(out_comb, out_comb$State, order(out_comb[,3], 
-  #                                                        out_comb[,1])) #Didn't work
-  #  tapply_test <- tapply(out_comb, out_comb$State, order) #Didn't work
+  print(out_table_sorted)
   
-  #    print("tapply_test is")
-  #  print(tapply_test)
-  # Now pull the name of the hospital with the given rank
+# Now pull the name of the hospital with the given rank
   if(rank == "best"){
     the_hospital <- out_table_sorted[1,1]
-    print(paste("The best hospital in the state with respect to", outcome, "is"))
-    print(the_hospital)
   }
   else if(rank == "worst") {
     the_hospital <- out_table_sorted[length(out_table_sorted[, 1]),1]
-    print(paste("The worst hospital in the state with respect to", outcome, "is"))
-    print(the_hospital)
   }
   # Test if the rank is reasonable
   else if(rank > 0 & rank <= length(out_table_sorted[, 1])){
-    the_hospital <- out_table_sorted[rank, 1]
-    print(paste("The hospital in the state of rank", rank, 
-                "with respect to", outcome, "is"))
-    print(the_hospital)
   }
   else {
     stop("invalid rank")
   }
-}
+
+#  hospital_list[i] <- table
+#  } # ends the for loop
+  }
 
