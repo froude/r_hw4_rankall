@@ -190,7 +190,8 @@ rankall <- function(outcome, rank) {
   hospital_list[i,1] <- as.character(the_hospital) # You have to convert 
 #  the_hospital to a character. Otherwise it returns the Factor number
   print(paste("hospital_list[i,1] is", hospital_list[i,1]))
-  hospital_list[i,2] <- states_list[i]
+#  hospital_list[i,2] <- states_list[i] # This worked. Try the following line to pass quiz
+  hospital_list[i,2] <- as.character(states_list[i])
   print(paste("hospital_list[i,2] is", hospital_list[i,2]))
   } # ends the for loop
     print(hospital_list)
